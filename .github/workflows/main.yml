@@ -1,0 +1,22 @@
+name: Apple Login
+on: [push]
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          cd env
+          source bin/activate
+          cd applelogin
+          git stash
+          git pull
+          pip install -r requirements.txt
+          python manage.py migrate
